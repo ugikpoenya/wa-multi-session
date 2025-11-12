@@ -1,4 +1,4 @@
-import { downloadMediaMessage } from "@whiskeysockets/baileys";
+import { WAMessage, downloadMediaMessage } from "@whiskeysockets/baileys";
 import { MessageReceived } from "../Types";
 import ValidationError from "./error";
 import fs from "fs/promises";
@@ -11,7 +11,7 @@ export const saveImageHandler = async (msg: MessageReceived, path: string) => {
   if (!msg.message?.imageMessage)
     throw new ValidationError("Message is not contain Image");
 
-  const buf = await downloadMediaMessage(msg, "buffer", {});
+  const buf = await downloadMediaMessage(msg as unknown as WAMessage, "buffer", {});
 
   return saveMedia(path, buf as Buffer);
 };
@@ -19,7 +19,7 @@ export const saveVideoHandler = async (msg: MessageReceived, path: string) => {
   if (!msg.message?.videoMessage)
     throw new ValidationError("Message is not contain Video");
 
-  const buf = await downloadMediaMessage(msg, "buffer", {});
+  const buf = await downloadMediaMessage(msg as unknown as WAMessage, "buffer", {});
 
   return saveMedia(path, buf as Buffer);
 };
@@ -31,7 +31,7 @@ export const saveDocumentHandler = async (
   if (!msg.message?.documentMessage)
     throw new ValidationError("Message is not contain Document");
 
-  const buf = await downloadMediaMessage(msg, "buffer", {});
+  const buf = await downloadMediaMessage(msg as unknown as WAMessage, "buffer", {});
 
   const ext = msg.message.documentMessage.fileName?.split(".").pop();
   path += "." + ext;
@@ -42,7 +42,7 @@ export const saveAudioHandler = async (msg: MessageReceived, path: string) => {
   if (!msg.message?.audioMessage)
     throw new ValidationError("Message is not contain Audio");
 
-  const buf = await downloadMediaMessage(msg, "buffer", {});
+  const buf = await downloadMediaMessage(msg as unknown as WAMessage, "buffer", {});
 
   return saveMedia(path, buf as Buffer);
 };

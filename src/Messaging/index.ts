@@ -1,4 +1,4 @@
-import { proto } from "@whiskeysockets/baileys";
+import { proto, WAMessage } from "@whiskeysockets/baileys";
 import { Messages } from "../Defaults";
 import { getSession } from "../Socket";
 import {
@@ -24,15 +24,15 @@ export const sendTextMessage = async ({
   if (!session) throw new WhatsappError(Messages.sessionNotFound(sessionId));
   to = phoneToJid({ to, isGroup });
 
-  return await session.sendMessage(
+  return (await session.sendMessage(
     to,
     {
       text: text,
     },
     {
-      quoted: props.answering,
+      quoted: props.answering ? (props.answering as WAMessage) : undefined,
     }
-  );
+  )) as proto.WebMessageInfo;
 };
 export const sendImage = async ({
   sessionId,
@@ -48,7 +48,7 @@ export const sendImage = async ({
 
   if (!media)
     throw new WhatsappError("parameter media must be Buffer or String URL");
-  return await session.sendMessage(
+  return (await session.sendMessage(
     to,
     {
       image:
@@ -60,9 +60,9 @@ export const sendImage = async ({
       caption: text,
     },
     {
-      quoted: props.answering,
+      quoted: props.answering ? (props.answering as WAMessage) : undefined,
     }
-  );
+  )) as proto.WebMessageInfo;
 };
 export const sendVideo = async ({
   sessionId,
@@ -78,7 +78,7 @@ export const sendVideo = async ({
 
   if (!media)
     throw new WhatsappError("parameter media must be Buffer or String URL");
-  return await session.sendMessage(
+  return (await session.sendMessage(
     to,
     {
       video:
@@ -90,9 +90,9 @@ export const sendVideo = async ({
       caption: text,
     },
     {
-      quoted: props.answering,
+      quoted: props.answering ? (props.answering as WAMessage) : undefined,
     }
-  );
+  )) as proto.WebMessageInfo;
 };
 export const sendDocument = async ({
   sessionId,
@@ -118,7 +118,7 @@ export const sendDocument = async ({
     throw new WhatsappError(`Filename must include valid extension`);
   }
 
-  return await session.sendMessage(
+  return (await session.sendMessage(
     to,
     {
       fileName: filename,
@@ -132,9 +132,9 @@ export const sendDocument = async ({
       caption: text,
     },
     {
-      quoted: props.answering,
+      quoted: props.answering ? (props.answering as WAMessage) : undefined,
     }
-  );
+  )) as proto.WebMessageInfo;
 };
 
 export const sendVoiceNote = async ({
@@ -152,7 +152,7 @@ export const sendVoiceNote = async ({
     throw new WhatsappError(`Invalid Media`);
   }
 
-  return await session.sendMessage(
+  return (await session.sendMessage(
     to,
     {
       audio:
@@ -164,9 +164,9 @@ export const sendVoiceNote = async ({
       ptt: true,
     },
     {
-      quoted: props.answering,
+      quoted: props.answering ? (props.answering as WAMessage) : undefined,
     }
-  );
+  )) as proto.WebMessageInfo;
 };
 
 export const sendSticker = async ({
@@ -184,7 +184,7 @@ export const sendSticker = async ({
     throw new WhatsappError(`Invalid Media`);
   }
 
-  return await session.sendMessage(
+  return (await session.sendMessage(
     to,
     {
       sticker:
@@ -195,9 +195,9 @@ export const sendSticker = async ({
           : media,
     },
     {
-      quoted: props.answering,
+      quoted: props.answering ? (props.answering as WAMessage) : undefined,
     }
-  );
+  )) as proto.WebMessageInfo;
 };
 
 /**
