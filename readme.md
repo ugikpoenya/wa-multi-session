@@ -1,5 +1,7 @@
 # Whatsapp Multi Session - Connecting More Whatsapp Session in 1 App
 
+> **Notice**: Redis Adapter has been added and is now the default adapter in the examples below.
+
 Connecting Your app with Whatsapp Messaging
 
 Lightweight library for whatsapp. Not require Selenium or any other browser.
@@ -19,22 +21,26 @@ Then import your code
 Using JS Module
 
 ```ts
-import { Whatsapp, SQLiteAdapter } from "wa-multi-session";
+import { Whatsapp, RedisAdapter } from "wa-multi-session";
 ```
 
 or using CommonJS
 
 ```ts
-const { Whatsapp, SQLiteAdapter } = require("wa-multi-session");
+const { Whatsapp, RedisAdapter } = require("wa-multi-session");
 ```
 
 ## Initialization
 
-Create new Whatsapp Instance
+Create new Whatsapp Instance with Redis Adapter
+
+> Or you can use SQLite Adapter by replacing `RedisAdapter` with `SQLiteAdapter`
 
 ```ts
 const whatsapp = new Whatsapp({
-  adapter: new SQLiteAdapter(),
+  adapter: new RedisAdapter({
+    url: "redis://localhost:6379",
+  }),
 
   // Optional: Add Listener/Callback
   onConnecting: (sessionId) => {
@@ -187,7 +193,9 @@ await whatsapp.sendPoll({
 
 ```ts
 const whatsapp = new Whatsapp({
-  adapter: new SQLiteAdapter(),
+  adapter: new RedisAdapter({
+    url: "redis://localhost:6379",
+  }),
   onMessageReceived: async (msg) => {
     if (msg.key.fromMe || msg.key.remoteJid?.includes("status")) return;
     const sender = msg.key.participant || msg.key.remoteJid!;
@@ -214,7 +222,9 @@ const whatsapp = new Whatsapp({
 
 ```ts
 const whatsapp = new Whatsapp({
-  adapter: new SQLiteAdapter(),
+  adapter: new RedisAdapter({
+    url: "redis://localhost:6379",
+  }),
   onMessageReceived: async (msg) => {
     if (msg.message?.imageMessage) {
       // save image
@@ -245,7 +255,23 @@ const adapter = new SQLiteAdapter({
 });
 ```
 
+Or use Redis adapter (default) with custom key prefix
+
+```ts
+const adapter = new RedisAdapter({
+  url: "redis://localhost:6379",
+  keyPrefix: "my_app:",
+});
+```
+
+## Adapter Options
+
+Redis is the default adapter in examples. You can still use SQLite by replacing
+`RedisAdapter` with `SQLiteAdapter` in the snippets above.
+
 ## Also Visit Headless Whatsapp Gateway API
+
+This is implementation of Whatsapp Multi Session that can be used as headless whatsapp gateway API, you can self host it and connect with your app using HTTP API or Websocket API.
 
 - [wa-gateway](https://www.github.com/mimamch/wa-gateway)
 
@@ -256,3 +282,9 @@ const adapter = new SQLiteAdapter({
 ## Feedback or Support
 
 If you have any feedback or support, please reach out to me at mimamch28@gmail.com
+
+## Release Notes
+
+### 2026-05-06
+
+- Added Redis adapter (default in examples).
